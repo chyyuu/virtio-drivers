@@ -52,7 +52,8 @@ qemu: $(bin)
 		-machine virt \
 		-serial mon:stdio \
 		-nographic \
-		-bios default \
+		-bios none \
+		-kernel ../../opensbi-0.6-rv64/fw_jump.elf \
 		-device loader,file=$(bin),addr=$(START_ADDR) \
 #		-drive file=$(img),if=none,format=raw,id=x0 \
 #		-device virtio-blk-device,drive=x0 \
