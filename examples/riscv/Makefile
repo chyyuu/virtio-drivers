@@ -1,5 +1,5 @@
 arch ?= riscv64
-target := $(arch)imac-unknown-none-elf
+target := $(arch)gc-unknown-none-elf
 mode := release
 kernel := target/$(target)/$(mode)/riscv
 bin := target/$(target)/$(mode)/kernel.bin
@@ -46,20 +46,22 @@ header:
 clean:
 	cargo clean
 
-qemu: $(bin) $(img)
-	sudo qemu-system-$(arch) \
+#qemu: $(bin) $(img)
+qemu: $(bin)
+	qemu-system-$(arch) \
 		-machine virt \
 		-serial mon:stdio \
+		-nographic \
 		-bios default \
 		-device loader,file=$(bin),addr=$(START_ADDR) \
-		-drive file=$(img),if=none,format=raw,id=x0 \
-		-device virtio-blk-device,drive=x0 \
-		-device virtio-gpu-device \
-		-device virtio-mouse-device \
-		-netdev type=tap,id=net0,script=no,downscript=no \
-		-device virtio-net-device,netdev=net0
+#		-drive file=$(img),if=none,format=raw,id=x0 \
+#		-device virtio-blk-device,drive=x0 \
+#		-device virtio-gpu-device \
+		-device virtio-mouse-device
+#		-netdev type=tap,id=net0,script=no,downscript=no \
+#		-device virtio-net-device,netdev=net0
 
-$(img):
-	dd if=/dev/zero of=$@ bs=512 count=32
+#$(img):
+#	dd if=/dev/zero of=$@ bs=512 count=32
 
 run: build qemu
